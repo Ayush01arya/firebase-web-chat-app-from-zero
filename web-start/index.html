@@ -1,0 +1,133 @@
+<html>
+      <head>
+      <script src="https://www.gstatic.com/firebasejs/3.0.0/firebase.js"></script>
+      <title>App do Zero</title>
+      <style>
+        #messages { width: 40em; border: 1px solid grey; min-height: 20em; }
+        #messages img { max-width: 240px; max-height: 160px; display: block; }
+        #header { position: fixed; top: 0; background-color: white; }
+        .push { margin-bottom: 2em; }
+        @keyframes yellow-fade { 0% {background: #f2f2b8;} 100% {background: none;} }
+        .highlight { -webkit-animation: yellow-fade 2s ease-in 1; animation: yellow-fade 2s ease-in 1; }
+      </style>
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Recuperando uma referência para os componentes da tela.
+        var messagesList = document.getElementById('messages'),
+            textInput = document.getElementById('text'),
+            sendButton = document.getElementById('send'),
+            login = document.getElementById('login'),
+            googleLogin = document.getElementById('google'),
+            facebookLogin = document.getElementById('facebook'),
+            signedIn = document.getElementById('loggedin'),
+            logout = document.getElementById('logout'),
+            usernameElm = document.getElementById('username'),
+            password = document.getElementById('password'),
+            username = "Web";
+
+      //TODO Inicializando o Firebase - fireCodelabInit
+
+
+      //TODO Carregando os dados de configuração do Firebase no app - fireLoadConfig
+
+
+      //TODO Recuperando uma referencia ao nó chat - fireDbRef
+
+
+        sendButton.addEventListener('click', function(evt) {
+          var chat = { name: username, message: textInput.value };
+          //TODO Salvar a mensagem no DB, não jogar na tela por aqui mais. - firePushMessage
+          addMessage(chat);
+
+          textInput.value = '';
+        });
+
+
+        //TODO Criar um listener para atualizar a tela quando nós filhos são adicionados ao db - fireMessagelistener
+
+
+        //TODO Abrir uma popup de autenticação quando o usuário tentar se logar com o Google - fireGoogleSignIn
+
+
+        // TODO Permitir que os usuários se desloguem - fireGoogleSignOut
+
+
+        // TODO Quando o usuário logar ou deslogar, atualizar seu username - fireOnAuthStateChanged
+
+
+        function handleFileSelect(e) {
+          var file = e.target.files[0];
+          //TODO Recuperar uma ref ao local de armazenam. de arquivos compart. - fireStorageRef
+
+          //TODO Recuperar uma ref para o arquivo em chat_photos/<FILENAME>.jpg - fireFileRef
+
+          //TODO Upload do arquivo para o Firebase Storage - firePutFile
+
+          //TODO Recuperar a url do upload para salvar no DB e permitir a visualização - fireOnUploadStateChanged
+
+
+        }
+        file.addEventListener('change', handleFileSelect, false);
+        function setUsername(newUsername) {
+          if (newUsername == null) {
+              newUsername = "Web";
+          }
+          //console.log(newUsername);
+          username = newUsername;
+          var isLoggedIn = username != 'Web';
+          usernameElm.innerText = newUsername;
+          logout.style.display = isLoggedIn ? '' : 'none';
+          facebookLogin.style.display = isLoggedIn ? 'none' : '';
+          googleLogin.style.display = isLoggedIn ? 'none' : '';
+        }
+
+        function addMessage(chat) {
+          var li = document.createElement('li');
+          var nameElm = document.createElement('h4');
+          nameElm.innerText = chat.name;
+          li.appendChild(nameElm);
+          li.className = 'highlight';
+          if ( chat.message.indexOf("https://firebasestorage.googleapis.com/") == 0
+            || chat.message.indexOf("https://lh3.googleusercontent.com/") == 0
+            || chat.message.indexOf("http://pbs.twimg.com/") == 0
+            || chat.message.indexOf("data:image/") == 0) {
+            var imgElm = document.createElement("img");
+            imgElm.src = chat.message;
+            li.appendChild(imgElm);
+          } else {
+            var messageElm = document.createElement("span");
+            messageElm.innerText = chat.message;
+            li.appendChild(messageElm);
+          }
+          messagesList.appendChild(li);
+          li.scrollIntoView(false);
+          sendButton.scrollIntoView(false);
+        }
+        //window.app = app; // NOTE: just for debugging
+        //for (var i=0; i < 10; i++) addMessage({ name: "Web", message: ''+i });
+        setUsername('Web');
+      });
+      </script>
+      </head>
+      <body>
+        <div id='header'>
+          <label for='username'><img src="https://www.gstatic.com/images/icons/material/system/1x/account_box_black_24dp.png" width="24"/></label>
+          <span id='username'></span>
+          <span id='login'>
+            <button id='google' class='idp-button'>Entrar com Google</button>
+            <button id='facebook' class='idp-button'>Entrar com Facebook</button>
+          </span>
+          <button id='logout' class='idp-button'>Sair</button>
+        </div>
+        <div class="push"></div>
+        <ul id='messages'></ul>
+        <div id='footer'>
+          <img src="https://www.gstatic.com/images/icons/material/system/1x/add_a_photo_black_24dp.png" width="24"/>
+          <input type="file" id="file" name="file" />
+          <input id='text'></input>
+          <button id='send'>Enviar</button>
+        </div>
+      </body>
+
+
+</html>
