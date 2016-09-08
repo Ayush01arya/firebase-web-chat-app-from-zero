@@ -1,0 +1,89 @@
+'.source.html':
+  'Set config data':
+    'prefix': 'fireCodelabInit'
+    'body': """
+            var config = {
+                apiKey: "...",
+                authDomain: "...",
+                databaseURL: "...",
+                storageBucket: "...",
+            };
+            """
+  'Load config data':
+    'prefix': 'fireLoadConfig'
+    'body': """
+             var app = firebase.initializeApp(config),
+                 database = app.database(),
+                 auth = app.auth(),
+                 storage = app.storage();
+            """
+  'Get database ref':
+    'prefix': 'fireDbRef'
+    'body': """
+             var databaseRef = database.ref().child('chat');
+            """
+  'Push message to db':
+    'prefix': 'firePushMessage'
+    'body': """
+             databaseRef.push().set(chat);
+            """
+  'Listen to messages and update screen':
+    'prefix': 'fireMessagelistener'
+    'body': """
+             databaseRef.on('child_added', function(snapshot) {
+               // Pega a mensagem de chat do snapshot e adiciona a tela.
+               var chat = snapshot.val();
+               addMessage(chat);
+             });
+            """
+  'Sign in with Google':
+    'prefix': 'fireGoogleSignIn'
+    'body': """
+             googleLogin.addEventListener('click', function(e) {
+               auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+             });
+            """
+  'Sign out from Google':
+    'prefix': 'fireGoogleSignOut'
+    'body': """
+             logout.addEventListener('click', function(e) {
+               auth.signOut();
+             });
+            """
+  'Update user onAuthStateChanged':
+    'prefix': 'fireOnAuthStateChanged'
+    'body': """
+             auth.onAuthStateChanged(function(user) {
+               if (user) {
+                 setUsername(user.displayName);
+               } else {
+                 // Usuário deslogou-se, colocar um username padrão
+                 setUsername("Web");
+               }
+             });
+            """
+  'Get storage ref':
+    'prefix': 'fireStorageRef'
+    'body': """
+             var storageRef = storage.ref().child('chat_photos');
+            """
+  'Get file ref':
+    'prefix': 'fireFileRef'
+    'body': """
+             var photoRef = storageRef.child(file.name);
+            """
+  'Upload file refered':
+    'prefix': 'firePutFile'
+    'body': """
+             var uploadTask = photoRef.put(file);
+            """
+  'Get file ref onUploadStateChanged':
+    'prefix': 'fireOnUploadStateChanged'
+    'body': """
+             uploadTask.on('state_changed', null, null, function() {
+               // Quando a imagem foi uplodeada com sucesso nós recuperamos sua URL para download.
+               var downloadUrl = uploadTask.snapshot.downloadURL;
+               // Colocamos a URL de download no campo de mensagens, assim o usuário pode salvá-la no DB
+               textInput.value = downloadUrl;
+             });
+            """
